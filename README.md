@@ -1,66 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Prerequisites ##
+Before getting started, make sure you have the following installed on your machine:
 
-## About Laravel
+Docker: Install Docker
+Docker Compose: Comes with Docker Desktop on macOS and Windows.
+Git: Install Git
+Setup Instructions
+1. Clone the Repository
+   Clone the project repository to your local machine:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+bash
+Copy
+Edit
+git clone https://github.com/yourusername/your-laravel-project.git
+cd your-laravel-project
+2. Copy .env.example to .env
+   The .env file contains environment-specific settings for the Laravel application. Copy the example to create a new .env file:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+bash
+Copy
+Edit
+cp .env.example .env
+3. Configure Environment Variables
+   Edit the .env file and configure the following variables:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+DB_DATABASE: The name of the database to use (e.g., testing).
+DB_USERNAME: The MySQL username.
+DB_PASSWORD: The MySQL password.
+APP_KEY: Laravel’s app key. You can generate it by running php artisan key:generate.
+4. Build and Start the Containers
+   You can use Docker to build and start the containers. This is the preferred method for setting up the environment.
 
-## Learning Laravel
+Run the following commands:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+bash
+Copy
+Edit
+docker-compose build
+docker-compose up -d
+This will start the following containers:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Laravel App: Your Laravel application.
+MySQL: The MySQL database for the application.
+PhpMyAdmin: A web interface for managing your MySQL database.
+5. Generate the Application Key
+   If you haven’t generated the application key yet, you can do so by running:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+bash
+Copy
+Edit
+docker-compose exec laravel.test php artisan key:generate
+6. Run Migrations
+   To set up the database schema, run the migrations:
 
-## Laravel Sponsors
+bash
+Copy
+Edit
+docker-compose exec laravel.test php artisan migrate
+7. Access the Application
+   Laravel Application: Visit http://localhost:80 in your browser (or the port specified in your .env file).
+   PhpMyAdmin: Access PhpMyAdmin at http://localhost:8081 (or the port specified in your .env file).
+   Log in to PhpMyAdmin using the database username and password from the .env file.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+8. (Optional) Running Tests
+   To run the tests for the application, use:
 
-### Premium Partners
+bash
+Copy
+Edit
+docker-compose exec laravel.test php artisan test
+9. Stopping the Containers
+   To stop the running containers, use:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+bash
+Copy
+Edit
+docker-compose down
+Notes
+If you encounter any issues related to permissions, try running the following commands to reset permissions for Docker volumes:
+bash
+Copy
+Edit
+sudo chown -R $USER:$USER .
+Ensure that your .env settings match the configuration in docker-compose.yml for MySQL.
+Docker Compose Services
+laravel.test: The main Laravel application container.
+mysql: The MySQL container for the application.
+demo-phpmyadmin: PhpMyAdmin for database management.
+Troubleshooting
+1. Database Connection Issues
+   If you're facing connection issues (e.g., SQLSTATE[HY000] [2002] Connection refused), ensure that the .env file has the correct DB_HOST value pointing to mysql (the service name).
 
-## Contributing
+env
+Copy
+Edit
+DB_HOST=mysql
+2. Missing Sessions Table
+   If the sessions table is missing in the database, you can run the following to create it:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+bash
+Copy
+Edit
+docker-compose exec laravel.test php artisan session:table
+docker-compose exec laravel.test php artisan migrate
+Contributing
+Feel free to fork this repository and contribute by submitting pull requests. Please follow the existing code style and write tests for any new features.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+License
+This project is licensed under the MIT License.
