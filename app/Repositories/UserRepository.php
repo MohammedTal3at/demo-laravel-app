@@ -38,4 +38,9 @@ class UserRepository implements UserRepositoryInterface
     {
         $user->tokens->each->delete();
     }
+
+    public function findById(int $id): ?User
+    {
+        return User::find($id);
+    }
 } 

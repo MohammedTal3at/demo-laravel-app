@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Attribute;
 use App\Contracts\Repositories\AttributeRepositoryInterface;
+use App\DTOs\Attribute\CreateAttributeDTO;
+use App\DTOs\Attribute\UpdateAttributeDTO;
 use Illuminate\Database\Eloquent\Collection;
 
 class AttributeService
@@ -15,9 +17,9 @@ class AttributeService
         $this->attributeRepository = $attributeRepository;
     }
 
-    public function create(array $data): Attribute
+    public function create(CreateAttributeDTO $dto): Attribute
     {
-        return $this->attributeRepository->create($data);
+        return $this->attributeRepository->create($dto->toArray());
     }
 
     public function getAllAttributes(): Collection
@@ -25,8 +27,9 @@ class AttributeService
         return $this->attributeRepository->getAll();
     }
 
-    public function update(Attribute $attribute, array $data): Attribute
+    public function update(Attribute $attribute, UpdateAttributeDTO $dto): Attribute
     {
+        $data = array_filter($dto->toArray(), fn($value) => !is_null($value));
         return $this->attributeRepository->update($attribute, $data);
     }
 

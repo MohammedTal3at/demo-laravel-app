@@ -5,41 +5,41 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\AuthService;
+ use App\Http\Requests\Auth\UpdateProfileRequest;
 
 class AuthController extends Controller
 {
+    private AuthService $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     // Register a new user
     public function register(RegisterRequest $request)
     {
-        $user = $this->authService->register($request->validated());
-        return response()->json(['token' => $user['token']], 201);
+        $result = $this->authService->register($request->toDTO());
+        return response()->json($result, 201);
     }
 
     // Login a user
-
-    /**
-     * @throws ValidationException
-     */
     public function login(LoginRequest $request)
     {
-        $token = $this->authService->login($request->validated());
-        return response()->json(['token' => $token]);
+        $result = $this->authService->login($request->toDTO());
+        return response()->json($result);
     }
 
     // Logout a user
     public function logout(Request $request)
     {
-        $request->user()->tokens->each(function ($token) {
-            $token->delete();
-        });
-
+        $this->authService->logout(Auth::id());
         return response()->json(['message' => 'Logged out successfully']);
     }
 
@@ -51,22 +51,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
-        $user = Auth::user();
-        
-        $validated = $request->validate([
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
-            'password' => 'sometimes|string|min:6|confirmed',
-        ]);
-
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        }
-
-        $user->update($validated);
+        $user = $this->authService->updateProfile(Auth::id(), $request->toDTO());
 
         return response()->json([
             'status' => 'success',

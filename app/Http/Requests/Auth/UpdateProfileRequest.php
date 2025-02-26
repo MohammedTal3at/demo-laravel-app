@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\DTOs\Auth\RegisterDTO;
+use App\DTOs\Auth\UpdateProfileDTO;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class RegisterRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,16 +16,16 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . Auth::id(),
+            'password' => 'sometimes|string|min:6|confirmed',
         ];
     }
 
-    public function toDTO(): RegisterDTO
+    public function toDTO(): UpdateProfileDTO
     {
-        return new RegisterDTO(
+        return new UpdateProfileDTO(
             first_name: $this->validated('first_name'),
             last_name: $this->validated('last_name'),
             email: $this->validated('email'),

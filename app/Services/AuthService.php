@@ -3,8 +3,13 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\DTOs\Auth\RegisterDTO;
+use App\DTOs\Auth\LoginDTO;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use App\DTOs\Auth\UpdateProfileDTO;
 
 class AuthService
 {
@@ -15,17 +20,17 @@ class AuthService
         $this->userRepository = $userRepository;
     }
 
-    public function register(array $data): array
+    public function register(RegisterDTO $dto): array
     {
-        $user = $this->userRepository->create($data);
+        $user = $this->userRepository->create($dto->toArray());
         $token = $this->userRepository->createToken($user, 'auth_token');
 
         return ['token' => $token];
     }
 
-    public function login(array $credentials): array
+    public function login(LoginDTO $dto): array
     {
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt($dto->toArray())) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -43,9 +48,15 @@ class AuthService
         $this->userRepository->deleteTokens($user);
     }
 
-    public function updateProfile(int $userId, array $data): User
+    public function updateProfile(int $userId, UpdateProfileDTO $dto): User
     {
         $user = $this->userRepository->findById($userId);
+        
+        $data = array_filter($dto->toArray(), fn($value) => !is_null($value));
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         return $this->userRepository->update($user, $data);
     }
 } 

@@ -30,10 +30,13 @@ cp .env.example .env
 Edit the `.env` file and update the following values:
 
 ```env
-DB_DATABASE=testing  # Change as needed
-DB_USERNAME=root     # Your MySQL username
-DB_PASSWORD=secret   # Your MySQL password
+APP_PORT=8056 # Your App port, http://localhost:{APP_PORT}
+DB_DATABASE=testing
+DB_USERNAME=admin
+DB_PASSWORD=admin
+FORWARD_DB_PORT=3302          # Change as needed 
 FORWARD_PHPMYADMIN_PORT=8081  # Your PhpMyAdmin port
+
 ```
 
 ### 4. Build and Start the Containers
@@ -50,35 +53,31 @@ This will start the following containers:
 - **MySQL**: Database service
 - **PhpMyAdmin**: Web interface for database management
 
-### 5. Generate the Application Key
+### 5. Install composer packages and generate needed keys
 If not already generated, run:
 
 ```bash
-docker-compose exec laravel.test php artisan key:generate
+./vendor/bind/sail composer install
+./vendor/bin/sail  artisan key:generate
+./vendor/bin/sail  artisan passport:install
+ 
 ```
 Please make sure that the container name for the laravel is laravel.test, otherwise you you need to check the name using "docker ps"
 
-### 6. Run Migrations
+### 6. Run Migrations and DB Seeders
 To set up the database schema, execute:
 
 ```bash
-docker-compose exec laravel.test php artisan migrate
+./vendor/bin/sail artisan migrate --seed
+
 ```
 
 ### 7. Access the Application
-- **Laravel App**: [http://localhost:80](http://localhost:80) (or the port specified in `.env`)
-- **PhpMyAdmin**: [http://localhost:8081](http://localhost:8081) (or the configured port)
+- **Laravel App**: [http://localhost:80](http://localhost:80) (or the port (APP_PORT) specified in `.env`)
+- **PhpMyAdmin**: [http://localhost:8081](http://localhost:8081) (or the configured port (FORWARD_PHPMYADMIN_PORT))
 
 Login to PhpMyAdmin using your `.env` database credentials.
 
----
-
-## (Optional) Running Tests
-To execute the application's tests:
-
-```bash
-docker-compose exec laravel.test php artisan test
-```
 
 ---
 
@@ -88,34 +87,6 @@ To stop all running containers:
 ```bash
 docker-compose down
 ```
-
----
-
-## Troubleshooting
-
-### 1. Database Connection Issues
-If you encounter SQL errors like `SQLSTATE[HY000] [2002] Connection refused`, ensure the `.env` file has the correct **DB_HOST** value:
-
-```env
-DB_HOST=mysql
-```
-
-### 2. Missing Sessions Table
-If the **sessions** table is missing, create it using:
-
-```bash
-docker-compose exec laravel.test php artisan session:table
-docker-compose exec laravel.test php artisan migrate
-```
-
-### 3. Permission Issues
-If you face file permission issues, reset permissions with:
-
-```bash
-sudo chown -R $USER:$USER .
-```
-
-Ensure `.env` settings match your **docker-compose.yml** configuration for MySQL.
 
 ---
 
