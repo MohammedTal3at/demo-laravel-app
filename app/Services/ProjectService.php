@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Project\CreateProjectDTO;
 use App\Models\Project;
 use App\Contracts\Repositories\ProjectRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,9 +15,9 @@ class ProjectService
     {
     }
 
-    public function create(array $data): Project
+    public function create(CreateProjectDTO $data): Project
     {
-        return $this->projectRepository->create($data);
+        return $this->projectRepository->create($data->toArray());
     }
 
     public function getAllProjects(array $filters = []): Collection
@@ -29,9 +30,9 @@ class ProjectService
         return $this->projectRepository->getWithDetails($project);
     }
 
-    public function update(Project $project, array $data): Project
+    public function update(Project $project, CreateProjectDTO $createProjectDTO): Project
     {
-        return $this->projectRepository->update($project, $data);
+        return $this->projectRepository->update($project, $createProjectDTO->toArray());
     }
 
     public function delete(Project $project): void

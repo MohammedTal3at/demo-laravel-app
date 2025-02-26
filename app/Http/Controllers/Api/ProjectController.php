@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\Project\CreateProjectDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
@@ -20,12 +21,12 @@ class ProjectController extends Controller
 
     public function store(StoreProjectRequest $request): JsonResponse
     {
-        $project = $this->projectService->create($request->validated());
+        $project = $this->projectService->create($request->toDTO());
         return response()->json($project, 201);
     }
 
 
-    public function index(GetProjectsRequest $request)
+    public function index(GetProjectsRequest $request): JsonResponse
     {
         $filters = $request->getValidatedFilters();
         $projects = $this->projectService->getAllProjects($filters);
@@ -40,21 +41,15 @@ class ProjectController extends Controller
     }
 
 
-    public function update(Request $request, Project $project): JsonResponse
+    public function update(StoreProjectRequest $request, Project $project): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'status' => 'sometimes|string|max:255',
-            'attributes' => 'array',
-        ]);
 
-        $project = $this->projectService->update($project, $validated);
+        $project = $this->projectService->update($project, $request->toDTO());
 
         return response()->json($project);
     }
 
-    // Delete a project and its attributes
-    public function destroy(Project $project): JsonResponse
+     public function destroy(Project $project): JsonResponse
     {
         $this->projectService->delete($project);
         return response()->json(['message' => 'Project deleted'], 204);

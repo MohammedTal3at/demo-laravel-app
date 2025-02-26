@@ -45,7 +45,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function profile()
+    public function profile(): JsonResponse
     {
         return response()->json([
             'status' => 'success',
