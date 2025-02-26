@@ -17,6 +17,11 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    // Hide the password attribute by default
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function projects(): BelongsToMany
     {

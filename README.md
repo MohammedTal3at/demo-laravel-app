@@ -229,7 +229,7 @@ Accept: application/json
     "name": "string",
     "status": "string",
     "attributes": {
-        "attribute_id": "value"
+        "attribute_id": "value",
     }
 }
 

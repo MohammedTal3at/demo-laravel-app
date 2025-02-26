@@ -19,7 +19,6 @@ class GetProjectsRequest extends FormRequest
     {
         return [
             'filters' => 'array',
-            'filters.*' => 'string',
             'filters.*.*' => 'string',
         ];
     }
@@ -28,16 +27,15 @@ class GetProjectsRequest extends FormRequest
     {
         $regularFields = Schema::getColumnListing('projects');
         $eavAttributes = Attribute::pluck('name')->toArray();
-        
+
         $rawFilters = $this->get('filters', []);
         $parsedFilters = [];
 
         foreach ($rawFilters as $field => $value) {
-            // Handle operator syntax (e.g., "name[like]" => "value")
-            if (preg_match('/^(.+?)\[(.+?)\]$/', $field, $matches)) {
-                $field = $matches[1];
-                $operator = strtolower($matches[2]);
-                
+            // Handle operator syntax (e.g., "filters[name][like]" => "value")
+            if (is_array($value)) {
+                $operator = array_key_first($value);
+                $value = $value[$operator];
                 // Validate operator
                 if (!in_array($operator, $this->allowedOperators)) {
                     continue;
@@ -67,4 +65,4 @@ class GetProjectsRequest extends FormRequest
             'filters.*.string' => 'Filter values must be strings',
         ];
     }
-} 
+}

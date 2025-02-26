@@ -58,7 +58,7 @@ class ProjectRepository implements ProjectRepositoryInterface
         $operator = $condition['operator'];
         $value = $condition['value'];
 
-        if ($operator === 'like') {
+        if ($operator == 'like') {
             $value = '%' . $value . '%';
         }
 
@@ -115,4 +115,4 @@ class ProjectRepository implements ProjectRepositoryInterface
         $project->users()->sync($userIds);
         return $project->load('users');
     }
-} 
+}
