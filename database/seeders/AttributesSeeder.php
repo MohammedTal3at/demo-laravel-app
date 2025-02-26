@@ -13,11 +13,10 @@ class AttributesSeeder extends Seeder
             ['name' => 'department', 'type' => 'text'],
             ['name' => 'budget', 'type' => 'number'],
             ['name' => 'start_date', 'type' => 'date'],
-            ['name' => 'is_priority', 'type' => 'boolean'],
         ];
 
         foreach ($attributes as $attribute) {
             Attribute::create($attribute);
         }
     }
-} 
+}

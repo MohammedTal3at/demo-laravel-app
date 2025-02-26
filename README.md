@@ -97,9 +97,9 @@ docker-compose down
 
 ---
 
-## Contributing
-Feel free to fork this repository and submit pull requests. Please follow the existing code style and include tests for any new features.
-
+## Test Credentials
+- **email: ali@example.com**
+- **password: password**
 ---
 
 ## API Documentation

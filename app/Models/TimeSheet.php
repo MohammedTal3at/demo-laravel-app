@@ -21,6 +21,8 @@ class TimeSheet extends Model
 {
     use HasFactory;
 
+    protected $table = 'timesheets';
+
     protected $fillable = [
         'task_name',
         'date',
