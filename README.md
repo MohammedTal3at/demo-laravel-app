@@ -8,6 +8,10 @@ Before getting started, ensure you have the following installed:
 - **Git**: [Install Git](https://git-scm.com/downloads)
 
 ---
+## Repository URL
+
+You can find the repository here: [https://github.com/MohammedTal3at/demo-laravel-app](https://github.com/MohammedTal3at/demo-laravel-app)
+---
 
 ## Setup Instructions
 
@@ -101,6 +105,12 @@ docker-compose down
 - **email: ali@example.com**
 - **password: password**
 ---
+
+
+## Dump SQL File
+- **Please find dump.sql file in database/dump.sql**
+---
+
 
 ## API Documentation
 
