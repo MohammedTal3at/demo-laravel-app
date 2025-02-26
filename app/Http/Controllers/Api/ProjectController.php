@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Http\Requests\Project\StoreProjectRequest;
@@ -12,21 +13,18 @@ use App\Http\Requests\Project\GetProjectsRequest;
 
 class ProjectController extends Controller
 {
-    protected $projectService;
 
-    public function __construct(ProjectService $projectService)
+    public function __construct(private readonly ProjectService $projectService)
     {
-        $this->projectService = $projectService;
     }
 
-    // Store a new project and its dynamic attributes
-    public function store(StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request): JsonResponse
     {
         $project = $this->projectService->create($request->validated());
         return response()->json($project, 201);
     }
 
-    // Fetch projects with dynamic attributes
+
     public function index(GetProjectsRequest $request)
     {
         $filters = $request->getValidatedFilters();
@@ -34,15 +32,15 @@ class ProjectController extends Controller
         return response()->json($projects);
     }
 
-    // Show a specific project with attributes
-    public function show(Project $project)
+
+    public function show(Project $project): JsonResponse
     {
         $project = $this->projectService->getProjectWithDetails($project);
         return response()->json($project);
     }
 
-    // Update a project's attributes
-    public function update(Request $request, Project $project)
+
+    public function update(Request $request, Project $project): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -56,13 +54,13 @@ class ProjectController extends Controller
     }
 
     // Delete a project and its attributes
-    public function destroy(Project $project)
+    public function destroy(Project $project): JsonResponse
     {
         $this->projectService->delete($project);
         return response()->json(['message' => 'Project deleted'], 204);
     }
 
-    public function timesheets(Project $project)
+    public function timesheets(Project $project): JsonResponse
     {
         $timesheets = $this->projectService->getProjectTimesheets($project);
 
@@ -72,7 +70,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function assignUsers(AssignUsersRequest $request, Project $project)
+    public function assignUsers(AssignUsersRequest $request, Project $project): JsonResponse
     {
         $project = $this->projectService->assignUsers($project, $request->validated()['user_ids']);
         return response()->json([

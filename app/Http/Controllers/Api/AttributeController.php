@@ -7,6 +7,7 @@ use App\Http\Requests\Attribute\CreateAttributeRequest;
 use App\Http\Requests\Attribute\UpdateAttributeRequest;
 use App\Models\Attribute;
 use App\Services\AttributeService;
+use Illuminate\Http\JsonResponse;
 
 class AttributeController extends Controller
 {
@@ -17,19 +18,19 @@ class AttributeController extends Controller
         $this->attributeService = $attributeService;
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
         $attributes = $this->attributeService->getAllAttributes();
         return response()->json(['data' => $attributes]);
     }
 
-    public function store(CreateAttributeRequest $request)
+    public function store(CreateAttributeRequest $request): JsonResponse
     {
         $attribute = $this->attributeService->create($request->toDTO());
         return response()->json(['data' => $attribute], 201);
     }
 
-    public function show(Attribute $attribute)
+    public function show(Attribute $attribute): JsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -37,13 +38,13 @@ class AttributeController extends Controller
         ]);
     }
 
-    public function update(UpdateAttributeRequest $request, Attribute $attribute)
+    public function update(UpdateAttributeRequest $request, Attribute $attribute): JsonResponse
     {
         $attribute = $this->attributeService->update($attribute, $request->toDTO());
         return response()->json(['data' => $attribute]);
     }
 
-    public function destroy(Attribute $attribute)
+    public function destroy(Attribute $attribute): JsonResponse
     {
         $this->attributeService->delete($attribute);
         return response()->json(null, 204);

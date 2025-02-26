@@ -110,6 +110,7 @@ Feel free to fork this repository and submit pull requests. Please follow the ex
 ```http
 POST /api/register
 Content-Type: application/json
+Accept: application/json
 
 {
     "first_name": "string",
@@ -129,6 +130,8 @@ Response (201):
 ```http
 POST /api/login
 Content-Type: application/json
+Accept: application/json
+
 
 {
     "email": "string",
@@ -145,6 +148,8 @@ Response (200):
 ```http
 POST /api/logout
 Authorization: Bearer {token}
+Accept: application/json
+
 
 Response (200):
 {
@@ -156,6 +161,8 @@ Response (200):
 ```http
 GET /api/profile
 Authorization: Bearer {token}
+Accept: application/json
+
 
 Response (200):
 {
@@ -174,6 +181,8 @@ Response (200):
 PUT /api/profile
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
+
 
 {
     "first_name": "string",
@@ -203,6 +212,8 @@ Response (200):
 POST /api/projects
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
+
 
 {
     "name": "string",
@@ -231,6 +242,8 @@ Response (201):
 ```http
 GET /api/projects
 Authorization: Bearer {token}
+Accept: application/json
+
 
 Optional Query Parameters:
 filters[field]=value                 # Equal operator (default)
@@ -323,6 +336,7 @@ Notes:
 ```http
 GET /api/projects/{id}
 Authorization: Bearer {token}
+Accept: application/json
 
 Response (200):
 {
@@ -348,6 +362,7 @@ Response (200):
 PUT /api/projects/{id}
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "string",
@@ -376,6 +391,7 @@ Response (200):
 ```http
 DELETE /api/projects/{id}
 Authorization: Bearer {token}
+Accept: application/json
 
 Response (204)
 ```
@@ -415,6 +431,7 @@ Response (200):
 POST /api/projects/{id}/users
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
 
 {
     "user_ids": [1, 2, 3]  // Array of user IDs to assign
@@ -470,6 +487,7 @@ Error Response (422):
 POST /api/timesheets
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
 
 {
     "task_name": "string",
@@ -518,6 +536,7 @@ Error Response (422):
 ```http
 GET /api/my-timesheets
 Authorization: Bearer {token}
+Accept: application/json
 
 Optional Query Parameters:
 - date: Filter by specific date (YYYY-MM-DD)
@@ -561,6 +580,7 @@ Response (200):
 POST /api/attributes
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "string",
@@ -589,6 +609,7 @@ Validation Rules:
 ```http
 GET /api/attributes
 Authorization: Bearer {token}
+Accept: application/json
 
 Response (200):
 {
@@ -609,6 +630,7 @@ Response (200):
 ```http
 GET /api/attributes/{id}
 Authorization: Bearer {token}
+Accept: application/json
 
 Response (200):
 {
@@ -628,6 +650,7 @@ Response (200):
 PUT /api/attributes/{id}
 Authorization: Bearer {token}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "string",
@@ -656,6 +679,7 @@ Validation Rules:
 ```http
 DELETE /api/attributes/{id}
 Authorization: Bearer {token}
+Accept: application/json
 
 Response (204):
 {

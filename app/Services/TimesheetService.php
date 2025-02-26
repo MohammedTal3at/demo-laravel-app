@@ -8,11 +8,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class TimesheetService
 {
-    private TimesheetRepositoryInterface $timesheetRepository;
 
-    public function __construct(TimesheetRepositoryInterface $timesheetRepository)
+    public function __construct(private readonly TimesheetRepositoryInterface $timesheetRepository)
     {
-        $this->timesheetRepository = $timesheetRepository;
     }
 
     public function logTime(array $data, int $userId): TimeSheet
@@ -24,4 +22,4 @@ class TimesheetService
     {
         return $this->timesheetRepository->getUserTimesheets($userId, $filters);
     }
-} 
+}

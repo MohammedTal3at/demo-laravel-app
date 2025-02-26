@@ -10,11 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class AttributeService
 {
-    private AttributeRepositoryInterface $attributeRepository;
 
-    public function __construct(AttributeRepositoryInterface $attributeRepository)
+    public function __construct(private readonly AttributeRepositoryInterface $attributeRepository)
     {
-        $this->attributeRepository = $attributeRepository;
     }
 
     public function create(CreateAttributeDTO $dto): Attribute

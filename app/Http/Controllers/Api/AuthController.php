@@ -5,13 +5,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\AuthService;
- use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -22,23 +23,24 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    // Register a new user
-    public function register(RegisterRequest $request)
-    {
+     public function register(RegisterRequest $request): JsonResponse
+     {
         $result = $this->authService->register($request->toDTO());
         return response()->json($result, 201);
     }
 
-    // Login a user
-    public function login(LoginRequest $request)
+
+    /**
+     * @throws ValidationException
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->authService->login($request->toDTO());
         return response()->json($result);
     }
 
-    // Logout a user
-    public function logout(Request $request)
-    {
+     public function logout(Request $request): JsonResponse
+     {
         $this->authService->logout(Auth::id());
         return response()->json(['message' => 'Logged out successfully']);
     }
@@ -51,7 +53,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateProfile(UpdateProfileRequest $request)
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
         $user = $this->authService->updateProfile(Auth::id(), $request->toDTO());
 

@@ -13,11 +13,9 @@ use App\DTOs\Auth\UpdateProfileDTO;
 
 class AuthService
 {
-    private UserRepositoryInterface $userRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UserRepositoryInterface $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function register(RegisterDTO $dto): array
@@ -51,7 +49,7 @@ class AuthService
     public function updateProfile(int $userId, UpdateProfileDTO $dto): User
     {
         $user = $this->userRepository->findById($userId);
-        
+
         $data = array_filter($dto->toArray(), fn($value) => !is_null($value));
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
@@ -59,4 +57,4 @@ class AuthService
 
         return $this->userRepository->update($user, $data);
     }
-} 
+}

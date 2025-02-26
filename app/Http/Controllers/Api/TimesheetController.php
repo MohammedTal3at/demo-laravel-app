@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TimesheetService;
@@ -10,17 +11,15 @@ use App\Http\Requests\Timesheet\LogTimeRequest;
 
 class TimesheetController extends Controller
 {
-    protected $timesheetService;
 
-    public function __construct(TimesheetService $timesheetService)
+    public function __construct(private readonly TimesheetService $timesheetService)
     {
-        $this->timesheetService = $timesheetService;
     }
 
-    public function store(LogTimeRequest $request)
+    public function store(LogTimeRequest $request): JsonResponse
     {
         $timesheet = $this->timesheetService->logTime(
-            $request->validated(), 
+            $request->validated(),
             auth()->id()
         );
 
@@ -31,7 +30,7 @@ class TimesheetController extends Controller
         ], 201);
     }
 
-    public function getUserTimesheets(Request $request)
+    public function getUserTimesheets(Request $request): JsonResponse
     {
         $timesheets = $this->timesheetService->getUserTimesheets(
             Auth::id(),

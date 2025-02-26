@@ -9,11 +9,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProjectService
 {
-    private ProjectRepositoryInterface $projectRepository;
 
-    public function __construct(ProjectRepositoryInterface $projectRepository)
+    public function __construct(private readonly ProjectRepositoryInterface $projectRepository)
     {
-        $this->projectRepository = $projectRepository;
     }
 
     public function create(array $data): Project
