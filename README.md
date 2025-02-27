@@ -19,8 +19,8 @@ You can find the repository here: [https://github.com/MohammedTal3at/demo-larave
 Clone the project repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/your-laravel-project.git
-cd your-laravel-project
+git clone https://github.com/MohammedTal3at/demo-laravel-app.git
+cd demo-laravel-app
 ```
 
 ### 2. Copy `.env.example` to `.env`
